@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import type info from "./types/Info";
+import type info from "./types/info";
+import { obtenerInfo } from "./services/infoService";
 
 import './App.css'
 
@@ -7,13 +8,7 @@ function App() {
   const [info, setInfo] = useState<info | null>(null);
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await fetch('https://d3ujwk09smrk9z.cloudfront.net/info');
-      const result = await response.json();
-      setInfo(result);
-    }
-
-    fetchData();
+     obtenerInfo().then(setInfo);
   }, []);
  
   return (
