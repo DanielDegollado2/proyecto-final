@@ -1,4 +1,4 @@
-export default interface info {
+export interface info {
     version: string;
     app: string;
 }

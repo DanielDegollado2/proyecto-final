@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import type info from "./types/info";
+import type { info } from "./types/info";
 import { obtenerInfo } from "./services/infoService";
 
 import './App.css'
