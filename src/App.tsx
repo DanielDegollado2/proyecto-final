@@ -5,6 +5,8 @@ import { AuthProvider } from './context/AuthContext'
 import { ProtectedRoute } from './ProtectedRoute'
 import { DashboardPage } from './pages/DashboardPage'
 import { LoginPage } from './pages/LoginPage'
+import { TasksPage } from './pages/TasksPage'
+import { ProjectTasksPage } from './pages/ProjectTasksPage'
 
 const theme = createTheme()
 const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '')
@@ -19,6 +21,8 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/tasks" element={<TasksPage />} />
+              <Route path="/projects/:projectId/tasks" element={<ProjectTasksPage />} />
             </Route>
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>

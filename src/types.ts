@@ -10,6 +10,27 @@ export interface Project {
   createdAt: string
 }
 
+export interface Task {
+  id: number
+  title: string
+  description?:string
+  status: string
+  priority: string
+  projectId: number
+  assigneeId: number
+  dueDate: string
+}
+
+export interface NewTask {
+  title: string
+  description?: string
+  status: string
+  priority: string
+  assigneeId?: number
+  projectId: number
+  dueDate: string
+}
+
 export interface NewProject {
   name: string
   description?: string
