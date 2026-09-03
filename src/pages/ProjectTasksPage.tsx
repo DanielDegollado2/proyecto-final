@@ -21,7 +21,7 @@ export function ProjectTasksPage() {
     const { tasks, loading, error, refetch } = useProjectTasks(projectId ? parseInt(projectId, 10) : null)
     const taskForm = useTaskForm({ projectId: projectId ? parseInt(projectId, 10) : 0, onSuccess: refetch })
     const [creatingTask, setCreatingTask] = useState(false)
-    const { project, loading: projectLoading } = useProject({ projectId: projectId ? parseInt(projectId, 10) : 0 })
+    const { project } = useProject({ projectId: projectId ? parseInt(projectId, 10) : 0 })
 
     function handleLogout() {
         logout()
