@@ -1,4 +1,3 @@
-import LogoutIcon from '@mui/icons-material/Logout'
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
