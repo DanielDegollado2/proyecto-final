@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import PersonIcon from '@mui/icons-material/Person'
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder'
-import type { Task } from '../types'
+import type { Task, TaskStatus, TaskPriority } from '../types'
 import { useTaskActions } from '../hooks/useTaskActions'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
@@ -25,8 +25,6 @@ import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import type { SelectChangeEvent } from '@mui/material/Select'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from 'dayjs'
 
 function getStatusColor(status: string) {
@@ -140,10 +138,10 @@ export function TaskCard({ task, onChanged }: TaskCardProps) {
                                     </Typography>
                                 </Stack>
                                 <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mb: 1.5, gap: 0.5 }}>
-                                    <Select
+                                    <Select<TaskStatus>
                                         value={task.status}
                                         size="small"
-                                        onChange={(e: SelectChangeEvent<string>) => void actions.handlePatch(e.target.value)}
+                                        onChange={(e: SelectChangeEvent<TaskStatus>) => void actions.handlePatch(e.target.value)}
                                         renderValue={(value) => (
                                             <Chip label={getStatusLabel(value)} color={getStatusColor(value)} size="small" />
                                         )}
@@ -166,98 +164,97 @@ export function TaskCard({ task, onChanged }: TaskCardProps) {
 
             <Dialog open={actions.editing} onClose={actions.cancelEditing} fullWidth maxWidth="sm">
                 <DialogContent>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <Box
-                            component="form"
-                            onSubmit={actions.handleUpdate}
-                        >
-                            <Stack spacing={2}>
-                                <Typography variant="subtitle1">Editar tarea #{task.id}</Typography>
+                    <Box
+                        component="form"
+                        onSubmit={actions.handleUpdate}
+                    >
+                        <Stack spacing={2}>
+                            <Typography variant="subtitle1">Editar tarea #{task.id}</Typography>
 
-                                {actions.error && <Alert severity="error">{actions.error}</Alert>}
+                            {actions.error && <Alert severity="error">{actions.error}</Alert>}
 
-                                <TextField
-                                    label="Nombre"
-                                    value={actions.title}
-                                    onChange={(event) => actions.setTitle(event.target.value)}
-                                    required
-                                    fullWidth
-                                    helperText="Entre 3 y 120 caracteres"
-                                    inputProps={{ minLength: 3, maxLength: 120 }}
-                                />
+                            <TextField
+                                label="Nombre"
+                                value={actions.title}
+                                onChange={(event) => actions.setTitle(event.target.value)}
+                                required
+                                fullWidth
+                                helperText="Entre 3 y 120 caracteres"
+                                inputProps={{ minLength: 3, maxLength: 120 }}
+                            />
 
-                                <TextField
-                                    label="Descripción"
-                                    value={actions.description}
-                                    onChange={(event) => actions.setDescription(event.target.value)}
-                                    fullWidth
-                                    multiline
-                                    rows={2}
-                                />
+                            <TextField
+                                label="Descripción"
+                                value={actions.description}
+                                onChange={(event) => actions.setDescription(event.target.value)}
+                                fullWidth
+                                multiline
+                                rows={2}
+                            />
 
-                                <Select
-                                    value={actions.status}
-                                    label="Estado"
-                                    onChange={(e: SelectChangeEvent<string>) => {
-                                        actions.setStatus(e.target.value)
-                                    }}
+                            <Select<TaskStatus>
+                                value={actions.status}
+                                label="Estado"
+                                onChange={(e: SelectChangeEvent<TaskStatus>) => {
+                                    actions.setStatus(e.target.value)
+                                }}
+                                disabled
+                            >
+                                <MenuItem value="TODO">Pendiente</MenuItem>
+                                <MenuItem value="IN_PROGRESS">En progreso</MenuItem>
+                                <MenuItem value="DONE">Completada</MenuItem>
+                            </Select>
+                            <Select<TaskPriority>
+                                value={actions.priority}
+                                label="Prioridad"
+                                onChange={(e: SelectChangeEvent<TaskPriority>) => actions.setPriority(e.target.value)}
+                                required
+                            >
+                                <MenuItem value="LOW">Baja</MenuItem>
+                                <MenuItem value="MED">Media</MenuItem>
+                                <MenuItem value="HIGH">Alta</MenuItem>
+                            </Select>
+                            <DatePicker
+                                label="Fecha de vencimiento"
+                                value={actions.dueDate ? dayjs(actions.dueDate) : null}
+                                onChange={(newValue) => actions.setDueDate(newValue ? newValue.format('YYYY-MM-DD') : '')}
+                                minDate={dayjs()}
+                                slotProps={{ textField: { fullWidth: true } }}
+                            />
+                            <TextField
+                                label="Asignado a"
+                                value={actions.assigneeId ?? ''}
+                                onChange={(e) => actions.setAssigneeId(e.target.value ? parseInt(e.target.value, 10) : null)}
+                                fullWidth
+                            />
+                            <TextField
+                                label="Project ID"
+                                value={actions.projectId}
+                                disabled
+                                fullWidth
+                            />
+
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    startIcon={<SaveIcon />}
+                                    disabled={!actions.valid || actions.busy}
                                 >
-                                    <MenuItem value="TODO">Pendiente</MenuItem>
-                                    <MenuItem value="IN_PROGRESS">En progreso</MenuItem>
-                                    <MenuItem value="DONE">Completada</MenuItem>
-                                </Select>
-                                <Select
-                                    value={actions.priority}
-                                    label="Prioridad"
-                                    onChange={(e: SelectChangeEvent<string>) => actions.setPriority(e.target.value)}
-                                    required
+                                    {actions.saving ? 'Guardando…' : 'Guardar cambios'}
+                                </Button>
+
+                                <Button
+                                    type="button"
+                                    startIcon={<CloseIcon />}
+                                    onClick={actions.cancelEditing}
+                                    disabled={actions.busy}
                                 >
-                                    <MenuItem value="LOW">Baja</MenuItem>
-                                    <MenuItem value="MED">Media</MenuItem>
-                                    <MenuItem value="HIGH">Alta</MenuItem>
-                                </Select>
-                                <DatePicker
-                                    label="Fecha de vencimiento"
-                                    value={actions.dueDate ? dayjs(actions.dueDate) : null}
-                                    onChange={(newValue) => actions.setDueDate(newValue ? newValue.format('YYYY-MM-DD') : '')}
-                                    minDate={dayjs()}
-                                    slotProps={{ textField: { fullWidth: true } }}
-                                />
-                                <TextField
-                                    label="Asignado a"
-                                    value={actions.assigneeId ?? ''}
-                                    onChange={(e) => actions.setAssigneeId(e.target.value ? parseInt(e.target.value, 10) : null)}
-                                    fullWidth
-                                />
-                                <TextField
-                                    label="Project ID"
-                                    value={actions.projectId}
-                                    disabled
-                                    fullWidth
-                                />
-
-                                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        startIcon={<SaveIcon />}
-                                        disabled={!actions.valid || actions.busy}
-                                    >
-                                        {actions.saving ? 'Guardando…' : 'Guardar cambios'}
-                                    </Button>
-
-                                    <Button
-                                        type="button"
-                                        startIcon={<CloseIcon />}
-                                        onClick={actions.cancelEditing}
-                                        disabled={actions.busy}
-                                    >
-                                        Cancelar
-                                    </Button>
-                                </Stack>
+                                    Cancelar
+                                </Button>
                             </Stack>
-                        </Box>
-                    </LocalizationProvider>
+                        </Stack>
+                    </Box>
                 </DialogContent>
             </Dialog>
         </>

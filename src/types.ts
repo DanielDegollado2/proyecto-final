@@ -10,12 +10,15 @@ export interface Project {
   createdAt: string
 }
 
+export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE'
+export type TaskPriority = 'LOW' | 'MED' | 'HIGH'
+
 export interface Task {
   id: number
   title: string
   description?:string
-  status: string
-  priority: string
+  status: TaskStatus
+  priority: TaskPriority
   projectId: number
   assigneeId: number
   dueDate: string
@@ -24,8 +27,8 @@ export interface Task {
 export interface NewTask {
   title: string
   description?: string
-  status: string
-  priority: string
+  status: TaskStatus
+  priority: TaskPriority
   assigneeId?: number
   projectId: number
   dueDate: string
@@ -45,4 +48,4 @@ export const API_URL =
   import.meta.env.VITE_API_URL ||
   (import.meta.env.DEV ? '/api' : 'https://d3ujwk09smrk9z.cloudfront.net')
 
-export const TOKEN_KEY = 'jwt-auth-demo-token'
+export const TOKEN_KEY = 'proyecto-final-token'

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { createTask } from '../services/taskService'
 import dayjs from 'dayjs'
+import type { TaskStatus, TaskPriority } from '../types'
 
 interface UseTaskFormOptions {
     projectId: number
@@ -10,9 +11,9 @@ interface UseTaskFormOptions {
 export function useTaskForm({ projectId, onSuccess }: UseTaskFormOptions) {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
-    const [status, setStatus] = useState('TODO')
-    const [priority, setPriority] = useState('MED')
-    const [asigneeId, setAsigneeId] = useState<number | null>(null)
+    const [status, setStatus] = useState<TaskStatus>('TODO')
+    const [priority, setPriority] = useState<TaskPriority>('MED')
+    const [assigneeId, setAssigneeId] = useState<number | null>(null)
     const [dueDate, setDueDate] = useState('')
     const [submitting, setSubmitting] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -24,7 +25,7 @@ export function useTaskForm({ projectId, onSuccess }: UseTaskFormOptions) {
         setDescription('')
         setStatus('TODO')
         setPriority('MED')
-        setAsigneeId(null)
+        setAssigneeId(null)
         setDueDate('')
         setError(null)
     }
@@ -47,7 +48,7 @@ export function useTaskForm({ projectId, onSuccess }: UseTaskFormOptions) {
                 description: description.trim() || undefined,
                 status: status,
                 priority: priority,
-                assigneeId: asigneeId || undefined,
+                assigneeId: assigneeId || undefined,
                 projectId: projectId,
                 dueDate: dueDate,
             })
@@ -70,8 +71,8 @@ export function useTaskForm({ projectId, onSuccess }: UseTaskFormOptions) {
         priority,
         setPriority,
         projectId,
-        asigneeId,
-        setAsigneeId,
+        assigneeId,
+        setAssigneeId,
         dueDate,
         setDueDate,
         submitting,

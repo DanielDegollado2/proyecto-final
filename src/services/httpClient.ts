@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { getApiBaseUrl } from '../config/apiUrl'
 import { TOKEN_KEY } from '../types'
+import { clearToken } from './authService'
 
 export const httpClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
@@ -14,6 +15,17 @@ httpClient.interceptors.request.use((config) => {
   }
   return config
 })
+
+httpClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      clearToken()          
+      window.location.href = '/login'
+    }
+    return Promise.reject(error)
+  }
+)
 
 export function getApiErrorMessage(err: unknown): string {
   if (axios.isAxiosError(err)) {

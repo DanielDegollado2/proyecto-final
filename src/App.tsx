@@ -7,6 +7,8 @@ import { DashboardPage } from './pages/DashboardPage'
 import { LoginPage } from './pages/LoginPage'
 import { TasksPage } from './pages/TasksPage'
 import { ProjectTasksPage } from './pages/ProjectTasksPage'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 const theme = createTheme({
   palette: {
@@ -20,6 +22,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
         <BrowserRouter basename={routerBasename}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
@@ -31,6 +34,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </BrowserRouter>
+        </LocalizationProvider>
       </AuthProvider>
     </ThemeProvider>
   )

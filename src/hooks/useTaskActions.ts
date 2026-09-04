@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import type { Task } from '../types'
+import type { Task, TaskStatus, TaskPriority } from '../types'
 import { deleteTask, patchTask, updateTask } from '../services/taskService'
 
 interface UseTaskActionsOptions {
@@ -15,8 +15,8 @@ export function useTaskActions({
   const [patching, setPatching] = useState(false)
   const [title, setTitle] = useState(task.title)
   const [description, setDescription] = useState(task.description ?? '')
-  const [status, setStatus] = useState(task.status)
-  const [priority, setPriority] = useState(task.priority)
+  const [status, setStatus] = useState<TaskStatus>(task.status)
+  const [priority, setPriority] = useState<TaskPriority>(task.priority)
   const [assigneeId, setAssigneeId] = useState<number | null>(task.assigneeId)
   const [dueDate, setDueDate] = useState(task.dueDate)
   const [saving, setSaving] = useState(false)
@@ -84,7 +84,7 @@ export function useTaskActions({
     }
   }
 
-  async function handlePatch(newStatus: string) {
+  async function handlePatch(newStatus: TaskStatus) {
     const isValidNewStatus = ['TODO', 'IN_PROGRESS', 'DONE'].includes(newStatus)
     if (!isValidNewStatus || busy) return  
     setSaving(true)
@@ -92,9 +92,7 @@ export function useTaskActions({
     setStatus(newStatus)
 
     try {
-      await patchTask(task.id, {
-        status: newStatus,
-      })
+      await patchTask(task.id, newStatus)
       setPatching(false)
       onSuccess?.()
     } catch (err: unknown) {

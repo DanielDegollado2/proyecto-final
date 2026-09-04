@@ -22,13 +22,13 @@ proyecto-final/
 ├── src/
 │   ├── assets/ 
 │   ├── components/         # Cards, formularios y componentes de UI reutilizables
-│   ├── config/             $ Configuración de la URL de la API
-│   ├── context/            $ Contexto de Autenticación (login, logout, isAuthenticated)
+│   ├── config/             # Configuración de la URL de la API
+│   ├── context/            # Contexto de Autenticación (login, logout, isAuthenticated)
 │   ├── hooks/              # Lógica de estado y efectos (useTasks, useProjects, etc.)
 │   ├── pages/              # Vistas asociadas a cada ruta (Login, Dashboard, Tasks, ProjectTasks, etc.)
 │   ├── services/           # Llamadas a la API (axios, endpoints)
-│   ├── types.ts            # Definir los tipos de datos que manejara la aplicación (Project, Task, etc.)
-│   ├── ProtectedRoute.tsx  # Protejer las rutas de los usuarios no autenticados
+│   ├── types.ts            # Define los tipos de datos que manejará la aplicación (Project, Task, etc.)
+│   ├── ProtectedRoute.tsx  # Protege las rutas de los usuarios no autenticados
 │   ├── App.tsx             # Configuración de ThemeProvider, rutas y layout
 │   └── main.tsx            # Punto de entrada de la aplicación
 ```
@@ -46,10 +46,10 @@ Cada servicio encapsula la lógica de comunicación con un recurso específico d
 
 ```
 services/
-├── authService.ts       # Métodos para llamar al endpoint /auth/login , guardar token, obtener token y borrar token
+├── authService.ts       # Métodos para llamar al endpoint /auth/login, guardar token, obtener token y borrar token
 ├── httpClient.ts        # Genera instancia de Axios, intercepta llamadas a la API para agregarles el token y maneja los mensajes de error
 ├── projectService.ts    # Métodos para obtener todos los proyectos, obtener un proyecto mediante su id, crear un proyecto, actualizar un proyecto mediante su id y borrar un proyecto mediante su id
-├── taskService.ts       # Métodos para obtener todos las tareas, crear una tarea, actualizar una tarea con PUT y PATCH mediante su id, borrar una tarea mediante su id
+├── taskService.ts       # Métodos para obtener todas las tareas, crear una tarea, actualizar una tarea con PUT y PATCH mediante su id, borrar una tarea mediante su id
 ```
 
 ## Formularios, validaciones y manejo de estado
@@ -67,9 +67,9 @@ hooks/
 ├── useProjectActions.ts    # Maneja la edición y eliminación de un proyecto: estado del formulario (nombre, descripción), validación, y llamadas a updateProject/deleteProject
 ├── useProjectForm.ts       # Maneja el estado del formulario (nombre, descripción) y llamada a createProject
 ├── useProjects.ts          # Obtiene todos los proyectos, expone el estado de la llamada (loading, error) y un callback para refrescar los datos
-├── useProjectTasks.ts      # Obtiene todos las tareas asignadas a un proyecto con una id especifica, expone el estado de la llamada (loading, error) y un callback para refrescar los datos
-├── useTaskActions.ts       # Maneja la edición y eliminación de una tarea: estado del formulario (titulo, descripción, estado, prioridad, assigneeId, fecha de vencimiento), validación, y llamadas a updateTask/patchTask/deleteTask
-├── useProjectForm.ts       # Maneja el estado del formulario (titulo, descripción, estado, prioridad, assigneeId, fecha de vencimiento) y llamada a createTask
+├── useProjectTasks.ts      # Obtiene todas las tareas asignadas a un proyecto con una ID específica, expone el estado de la llamada (loading, error) y un callback para refrescar los datos
+├── useTaskActions.ts       # Maneja la edición y eliminación de una tarea: estado del formulario (título, descripción, estado, prioridad, assigneeId, fecha de vencimiento), validación, y llamadas a updateTask/patchTask/deleteTask
+├── useTaskForm.ts          # Maneja el estado del formulario (título, descripción, estado, prioridad, assigneeId, fecha de vencimiento) y llamada a createTask
 ├── useTasks.ts             # Obtiene todas las tareas, expone el estado de la llamada (loading, error) y un callback para refrescar los datos
 ```
 
@@ -80,8 +80,6 @@ El provider entrega:
 - `isAuthenticated`: booleano que indica si el usuario está autenticado
 - `login`:  método para iniciar sesión
 - `logout`: método para cerrar sesión
-
-También se implementó `ThemeContext` para manejar el estilo global de la UI.
 
 ## CI/CD y Deploy
 El proyecto usa GitHub Actions para automatizar la compilación y el despliegue a GitHub Pages cada vez que se actualiza la rama `main`.

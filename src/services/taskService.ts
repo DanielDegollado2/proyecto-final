@@ -1,5 +1,5 @@
 import { httpClient } from './httpClient'
-import type { NewTask, Task, UpdateTask } from '../types'
+import type { NewTask, Task, TaskStatus, UpdateTask } from '../types'
 
 export async function getTasks(): Promise<Task[]> {
   const { data } = await httpClient.get<Task[]>('/tasks')
@@ -16,8 +16,8 @@ export async function updateTask(id: number, body: UpdateTask): Promise<Task> {
   return data
 }
 
-export async function patchTask(id: number, body: Partial<UpdateTask>): Promise<Task> {
-  const { data } = await httpClient.patch<Task>(`/tasks/${id}/status`, body)
+export async function patchTask(id: number, status: TaskStatus): Promise<Task> {
+  const { data } = await httpClient.patch<Task>(`/tasks/${id}/status`, { status })
   return data
 }
 
