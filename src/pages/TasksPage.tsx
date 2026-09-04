@@ -9,13 +9,27 @@ export function TasksPage() {
   const { tasks, loading, error, refetch } = useTasks()
 
   return (
-    <Box maxWidth={1000} mx="auto" mt={6}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
-        <Box>
-          <Typography variant="h4" gutterBottom>
-            Tasks
-          </Typography>
-        </Box>
+    <Box maxWidth="auto" mx="auto" mt={6}>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{
+          px: 3,
+          py: 2,
+          mb: 3,
+          bgcolor: 'background.paper',
+          borderBottom: 1,
+          borderColor: 'divider',
+          boxShadow: 1,
+          position: 'sticky',
+          top: 0,
+          zIndex: 1100,
+        }}
+      >
+        <Typography variant="h6" fontWeight={500}>
+          Tasks
+        </Typography>
       </Stack>
 
       <Paper sx={{ p: 3 }}>

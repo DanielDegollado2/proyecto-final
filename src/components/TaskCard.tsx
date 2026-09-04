@@ -76,7 +76,7 @@ export function TaskCard({ task, onChanged }: TaskCardProps) {
 
     return (
         <>
-            <Card sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }} variant="elevation">
+            <Card sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }} variant="elevation" elevation={6}>
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} justifyContent="flex-end">
                         <Tooltip title="Editar tarea">
@@ -112,17 +112,6 @@ export function TaskCard({ task, onChanged }: TaskCardProps) {
                         </Typography>
                     )}
 
-                    <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mb: 1.5, gap: 0.5 }}>
-                        <Chip
-                            label={actions.status}
-                            color={getStatusColor(actions.status)}
-                            size="small"
-                            onClick={() => actions.handlePatch(getNextStatus(actions.status))}
-                            sx={{ cursor: 'pointer' }}
-                        />
-                        <Chip label={task.priority} color={getPriorityColor(task.priority)} size="small" />
-                    </Stack>
-
                     <Box sx={{ mt: 'auto' }}>
                         <Divider sx={{ mb: 1.5 }} />
 
@@ -130,7 +119,7 @@ export function TaskCard({ task, onChanged }: TaskCardProps) {
                             <Stack direction="row" alignItems="center" spacing={1}>
                                 <CalendarTodayIcon fontSize="small" color="action" />
                                 <Typography variant="caption" color="text.secondary">
-                                    Vence: {task.dueDate}
+                                    Vence: {task.dueDate ? dayjs(task.dueDate).format('YYYY-MM-DD') : 'Fecha indefinida'}
                                 </Typography>
                             </Stack>
 
@@ -140,11 +129,23 @@ export function TaskCard({ task, onChanged }: TaskCardProps) {
                                     {task.assigneeId ? `Asignado a ID ${task.assigneeId}` : 'Sin asignar'}
                                 </Typography>
                             </Stack>
-                            <Stack direction="row" alignItems="center" spacing={1}>
-                                <CreateNewFolderIcon fontSize="small" color="action" />
-                                <Typography variant="caption" color="text.secondary">
-                                    {task.projectId ? `Project ID ${task.projectId}` : 'Sin proyecto'}
-                                </Typography>
+                            <Stack direction="row" alignItems="center" spacing={1} justifyContent="space-between">
+                                <Stack direction="row" alignItems="end" spacing={1}>
+                                    <CreateNewFolderIcon fontSize="small" color="action" />
+                                    <Typography variant="caption" color="text.secondary">
+                                        {task.projectId ? `Project ID ${task.projectId}` : 'Sin proyecto'}
+                                    </Typography>
+                                </Stack>
+                                <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mb: 1.5, gap: 0.5 }}>
+                                    <Chip
+                                        label={actions.status}
+                                        color={getStatusColor(actions.status)}
+                                        size="small"
+                                        onClick={() => actions.handlePatch(getNextStatus(actions.status))}
+                                        sx={{ cursor: 'pointer' }}
+                                    />
+                                    <Chip label={task.priority} color={getPriorityColor(task.priority)} size="small" />
+                                </Stack>
                             </Stack>
                         </Stack>
                     </Box>
@@ -208,7 +209,7 @@ export function TaskCard({ task, onChanged }: TaskCardProps) {
                                     value={actions.dueDate ? dayjs(actions.dueDate) : null}
                                     onChange={(newValue) => actions.setDueDate(newValue ? newValue.format('YYYY-MM-DD') : '')}
                                     minDate={dayjs()}
-                                    slotProps={{ textField: { fullWidth: true, required: true } }}
+                                    slotProps={{ textField: { fullWidth: true } }}
                                 />
                                 <TextField
                                     label="Asignado a"

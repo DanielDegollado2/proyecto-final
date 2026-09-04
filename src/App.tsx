@@ -8,7 +8,11 @@ import { LoginPage } from './pages/LoginPage'
 import { TasksPage } from './pages/TasksPage'
 import { ProjectTasksPage } from './pages/ProjectTasksPage'
 
-const theme = createTheme()
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+})
 const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '')
 
 export default function App() {

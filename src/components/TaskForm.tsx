@@ -106,7 +106,7 @@ export function TaskForm({
                   value={dueDate ? dayjs(dueDate) : null}
                   onChange={(newValue) => setDueDate(newValue ? newValue.format('YYYY-MM-DD') : '')}
                   minDate={dayjs()}
-                  slotProps={{ textField: { fullWidth: true, required: true } }}
+                  slotProps={{ textField: { fullWidth: true } }}
               />
               <TextField
                   label="Asignado a"

@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
-import { API_URL } from '../types'
 
 export function LoginPage() {
   const { login } = useAuth()
@@ -36,20 +35,13 @@ export function LoginPage() {
   return (
     <Box maxWidth={480} mx="auto" mt={8}>
       <Typography variant="h4" gutterBottom>
-        JWT Auth Demo
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Fase 1 — servicio + hook + pantalla de login.
+        Taskflow API
       </Typography>
 
       <Paper sx={{ p: 3 }}>
         <form onSubmit={handleSubmit}>
           <Stack spacing={2}>
             {error && <Alert severity="error">{error}</Alert>}
-
-            <Alert severity="info" variant="outlined">
-              API: <strong>{API_URL}</strong>
-            </Alert>
 
             <TextField
               label="Usuario"

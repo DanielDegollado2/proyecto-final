@@ -3,6 +3,8 @@ import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder'
 import ViewListIcon from '@mui/icons-material/ViewList'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
@@ -18,10 +20,12 @@ export function DashboardPage() {
   const { logout } = useAuth()
   const navigate = useNavigate()
   const { projects, loading, error, refetch } = useProjects()
-  const projectForm = useProjectForm({ onSuccess: () => {
-        refetch()
-        setCreatingProject(false)
-    } })
+  const projectForm = useProjectForm({
+    onSuccess: () => {
+      refetch()
+      setCreatingProject(false)
+    }
+  })
   const [creatingProject, setCreatingProject] = useState(false)
 
   function handleLogout() {
@@ -30,42 +34,57 @@ export function DashboardPage() {
   }
 
   return (
-    <Box maxWidth={720} mx="auto" mt={6} px={2}>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={3}
-      >
-        <Box>
-          <Typography variant="h4" gutterBottom>
+    <>
+      <Box maxWidth="auto" mx="auto" mt={6} >
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{
+            px: 3,
+            py: 2,
+            mb: 3,
+            bgcolor: 'background.paper',
+            borderBottom: 1,
+            borderColor: 'divider',
+            boxShadow: 1,
+            position: 'sticky',
+            top: 0,
+            zIndex: 1100,
+          }}
+        >
+          <Typography variant="h6" fontWeight={500}>
             Dashboard
           </Typography>
-          <Button startIcon={<CreateNewFolderIcon />} onClick={() => setCreatingProject(true)}>
-            Crear proyecto
-          </Button>
-          <Button startIcon={<ViewListIcon />} onClick={() => navigate('/tasks')}>
-            Ver todas las tareas
-          </Button>
-          <Button startIcon={<LogoutIcon />} onClick={handleLogout}>
-            Cerrar sesión
-          </Button>
-        </Box>
-      </Stack>
-      {creatingProject && (
-        <Paper sx={{ p: 3, mb: 3 }}>
-          <ProjectForm {...projectForm} onClose={() => setCreatingProject(false)} />
-        </Paper>
-      )}
 
-      <Paper sx={{ p: 3 }}>
-        <ProjectList
-          projects={projects}
-          loading={loading}
-          error={error}
-          onChanged={refetch}
-        />
-      </Paper>
-    </Box>
+          <Stack direction="row" spacing={1}>
+            <Button startIcon={<CreateNewFolderIcon />} onClick={() => setCreatingProject(true)}>
+              Crear proyecto
+            </Button>
+            <Button startIcon={<ViewListIcon />} onClick={() => navigate('/tasks')}>
+              Ver todas las tareas
+            </Button>
+            <Button startIcon={<LogoutIcon />} onClick={handleLogout}>
+              Cerrar sesión
+            </Button>
+          </Stack>
+        </Stack>
+
+        <Paper sx={{ p: 3 }}>
+          <ProjectList
+            projects={projects}
+            loading={loading}
+            error={error}
+            onChanged={refetch}
+          />
+        </Paper>
+      </Box>
+
+      <Dialog open={creatingProject} onClose={() => setCreatingProject(false)} fullWidth maxWidth="sm">
+        <DialogContent>
+          <ProjectForm {...projectForm} onClose={() => setCreatingProject(false)} />
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
