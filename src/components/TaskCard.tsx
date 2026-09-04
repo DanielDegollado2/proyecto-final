@@ -47,10 +47,13 @@ function getPriorityColor(priority: string) {
     }
 }
 
-function getNextStatus(current: string): string {
-    const order = ['TODO', 'IN_PROGRESS', 'DONE']
-    const currentIndex = order.indexOf(current)
-    return order[(currentIndex + 1) % order.length]
+function getStatusLabel(status: string) {
+    switch (status) {
+        case 'DONE': return 'Completada'
+        case 'TODO': return 'Pendiente'
+        case 'IN_PROGRESS': return 'En progreso'
+        default: return status
+    }
 }
 
 interface TaskCardProps {
@@ -137,13 +140,22 @@ export function TaskCard({ task, onChanged }: TaskCardProps) {
                                     </Typography>
                                 </Stack>
                                 <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mb: 1.5, gap: 0.5 }}>
-                                    <Chip
-                                        label={actions.status}
-                                        color={getStatusColor(actions.status)}
+                                    <Select
+                                        value={task.status}
                                         size="small"
-                                        onClick={() => actions.handlePatch(getNextStatus(actions.status))}
-                                        sx={{ cursor: 'pointer' }}
-                                    />
+                                        onChange={(e: SelectChangeEvent<string>) => void actions.handlePatch(e.target.value)}
+                                        renderValue={(value) => (
+                                            <Chip label={getStatusLabel(value)} color={getStatusColor(value)} size="small" />
+                                        )}
+                                        sx={{
+                                            '.MuiOutlinedInput-notchedOutline': { border: 'none' },
+                                            '.MuiSelect-select': { padding: 0 },
+                                        }}
+                                    >
+                                        <MenuItem value="TODO">Pendiente</MenuItem>
+                                        <MenuItem value="IN_PROGRESS">En progreso</MenuItem>
+                                        <MenuItem value="DONE">Completada</MenuItem>
+                                    </Select>
                                     <Chip label={task.priority} color={getPriorityColor(task.priority)} size="small" />
                                 </Stack>
                             </Stack>

@@ -13,6 +13,10 @@ import { useState } from 'react'
 import { useProject } from '../hooks/useProject'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select, { type SelectChangeEvent } from '@mui/material/Select'
 
 export function ProjectTasksPage() {
     const { projectId } = useParams<{ projectId: string }>()
@@ -25,7 +29,11 @@ export function ProjectTasksPage() {
     })
     const [creatingTask, setCreatingTask] = useState(false)
     const { project } = useProject({ projectId: projectId ? parseInt(projectId, 10) : 0 })
+    const [statusFilter, setStatusFilter] = useState<string>('ALL')
 
+    const filteredTasks = statusFilter === 'ALL'
+        ? tasks
+        : tasks.filter((task) => task.status === statusFilter)
 
     return (
         <>
@@ -52,14 +60,30 @@ export function ProjectTasksPage() {
                             {project && project.name}
                         </Typography>
                     </Box>
-                    <Button startIcon={<AssignmentIcon />} onClick={() => setCreatingTask(true)}>
-                        Crear tarea
-                    </Button>
+                    <Stack direction="row" spacing={1}>
+                        <FormControl size="small" sx={{ minWidth: 180, mb: 2 }}>
+                            <InputLabel id="status-filter-label">Filtrar por estado</InputLabel>
+                            <Select
+                                labelId="status-filter-label"
+                                value={statusFilter}
+                                label="Filtrar por estado"
+                                onChange={(e: SelectChangeEvent<string>) => setStatusFilter(e.target.value)}
+                            >
+                                <MenuItem value="ALL">Todas</MenuItem>
+                                <MenuItem value="TODO">Pendiente</MenuItem>
+                                <MenuItem value="IN_PROGRESS">En progreso</MenuItem>
+                                <MenuItem value="DONE">Completada</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <Button startIcon={<AssignmentIcon />} onClick={() => setCreatingTask(true)}>
+                            Crear tarea
+                        </Button>
+                    </Stack>
                 </Stack>
 
 
                 <Paper sx={{ p: 3 }}>
-                    <TaskList tasks={tasks} loading={loading} error={error} onChanged={refetch} />
+                    <TaskList tasks={filteredTasks} loading={loading} error={error} onChanged={refetch} />
                 </Paper>
             </Box>
 
