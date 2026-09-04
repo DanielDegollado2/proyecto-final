@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography'
 import { useNavigate } from 'react-router-dom'
 import { useProjectActions } from '../hooks/useProjectActions'
 import type { Project } from '../types'
+import Divider from '@mui/material/Divider'
 
 interface ProjectItemProps {
     project: Project
@@ -95,7 +96,33 @@ export function ProjectItem({ project, onChanged }: ProjectItemProps) {
         <Paper variant="outlined" sx={{ p: 2 }}>
             <Stack spacing={1.5}>
                 {actions.error && <Alert severity="error">{actions.error}</Alert>}
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
+                    <Button
+                        size="small"
+                        startIcon={<EditIcon />}
+                        onClick={actions.startEditing}
+                        disabled={actions.busy}
+                    >
+                        Editar
+                    </Button>
 
+                    <Button
+                        size="small"
+                        color="error"
+                        startIcon={<DeleteIcon />}
+                        onClick={confirmDelete}
+                        disabled={actions.busy}
+                    >
+                        {actions.deleting ? 'Eliminando…' : 'Eliminar'}
+                    </Button>
+                    <Button
+                        startIcon={<AssignmentIcon />}
+                        onClick={() => navigate(`/projects/${project.id}/tasks`)}
+                    >
+                        Ver tareas
+                    </Button>
+                </Stack>
+                <Divider sx={{ mb: 1.5 }} />
                 <Stack
                     direction={{ xs: 'column', sm: 'row' }}
                     justifyContent="space-between"
@@ -104,7 +131,7 @@ export function ProjectItem({ project, onChanged }: ProjectItemProps) {
                 >
                     <Stack spacing={0.5}>
                         <Typography variant="subtitle1">{project.name}</Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" color="text.secondary" fontWeight={500}>
                             {project.description || 'Sin descripción'}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
@@ -112,32 +139,6 @@ export function ProjectItem({ project, onChanged }: ProjectItemProps) {
                         </Typography>
                     </Stack>
 
-                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-                        <Button
-                            size="small"
-                            startIcon={<EditIcon />}
-                            onClick={actions.startEditing}
-                            disabled={actions.busy}
-                        >
-                            Editar
-                        </Button>
-
-                        <Button
-                            size="small"
-                            color="error"
-                            startIcon={<DeleteIcon />}
-                            onClick={confirmDelete}
-                            disabled={actions.busy}
-                        >
-                            {actions.deleting ? 'Eliminando…' : 'Eliminar'}
-                        </Button>
-                        <Button
-                            startIcon={<AssignmentIcon />}
-                            onClick={() => navigate(`/projects/${project.id}/tasks`)}
-                        >
-                            Ver tareas
-                        </Button>
-                    </Stack>
                 </Stack>
             </Stack>
         </Paper>
